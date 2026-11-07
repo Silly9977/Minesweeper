@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How often does Minesweeper force you to guess?</title>
+<meta name="description" content="I played 1,000,000 random Minesweeper boards with a solver that only makes moves it can prove. About 85% of Expert boards can't be finished without a guess.">
+<meta property="og:title" content="How often does Minesweeper force you to guess?">
+<meta property="og:description" content="1,000,000 random boards, played by pure logic. About 85% of Expert boards force a guess.">
+<meta property="og:image" content="https://silly9977.github.io/minesweeper/minesweeper-forced-guess.png">
+<style>
+  :root { --bg: #fbfaf7; --fg: #23262b; --muted: #5d636b; --line: #d9d8d2; --accent: #1f6f54; --head: #f1f0ea; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #16181b; --fg: #e4e4e0; --muted: #a1a5aa; --line: #34373c; --accent: #7fcfae; --head: #212428; color-scheme: dark; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 18px/1.65 Georgia, "Times New Roman", serif; padding-block: 48px 72px; }
+  main { max-width: 680px; margin: 0 auto; padding-inline: 20px; }
+  h1 { font: 700 2.1rem/1.2 system-ui, -apple-system, "Segoe UI", sans-serif; margin: 0 0 .4em; text-wrap: balance; }
+  h2 { font: 700 1.25rem/1.3 system-ui, -apple-system, "Segoe UI", sans-serif; margin: 2.2em 0 .5em; }
+  .byline { color: var(--muted); font: .92rem/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; margin-bottom: 2.2em; }
+  p { margin: 0 0 1.1em; }
+  a { color: var(--accent); }
+  img { max-width: 100%; height: auto; display: block; margin: 1.6em 0; border: 1px solid var(--line); border-radius: 6px; }
+  .wrap { overflow-x: auto; margin: 1.4em 0; }
+  table { border-collapse: collapse; width: 100%; font: .92rem/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; font-variant-numeric: tabular-nums; }
+  th, td { padding: 8px 10px; border-bottom: 1px solid var(--line); text-align: right; white-space: nowrap; }
+  th { background: var(--head); }
+  th:first-child, td:first-child { text-align: left; }
+  li { margin-bottom: .5em; }
+  footer { margin-top: 3em; padding-top: 1.2em; border-top: 1px solid var(--line); color: var(--muted); font-size: .95rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>How often does Minesweeper force you to guess?</h1>
+<div class="byline">By Sohail. November 2026.</div>
+
+<p>Everyone who has played Minesweeper knows the moment. Two covered squares, one mine, and nothing left to reason with. You tap one and hope.</p>
+
+<p>I wanted a real number for how often that happens, so I played 1,000,000 random boards with a solver that only makes moves it can prove. It stops the moment no square can be proven safe or proven to be a mine.</p>
+
+<div class="wrap"><table>
+<tr><th>Difficulty</th><th>Board</th><th>Mines</th><th>Mine density</th><th>Forces a guess</th><th>95% interval</th></tr>
+<tr><td>Beginner</td><td>9×9</td><td>10</td><td>12.3%</td><td><strong>9.95%</strong></td><td>9.82 to 10.08</td></tr>
+<tr><td>Intermediate</td><td>16×16</td><td>40</td><td>15.6%</td><td><strong>30.00%</strong></td><td>29.80 to 30.21</td></tr>
+<tr><td>Expert</td><td>30×16</td><td>99</td><td>20.6%</td><td><strong>84.73%</strong></td><td>84.58 to 84.89</td></tr>
+</table></div>
+
+<p>So about 5 of every 6 Expert boards can't be finished by logic alone, even for a perfect player. If you've ever felt that Expert comes down to luck in the end, you're mostly right.</p>
+
+<img src="minesweeper-forced-guess.png" alt="Chart of how often Minesweeper forces a guess: about 10 percent on Beginner, 30 percent on Intermediate and 85 percent on Expert, rising steeply with mine density." width="1600">
+
+<h2>What "forces a guess" means here</h2>
+
+<p>After every move, the solver looks at all the visible numbers plus the total count of mines left. If no covered square can be proven either way, the board counts as forcing a guess.</p>
+
+<p>That guess isn't always a coin flip. The odds can be well in your favor, but you still can't prove the move. This measures whether logic is enough, not how often people win.</p>
+
+<p>Mines are placed at random. The first click lands on a random square and always opens a clearing, so there's no mine on it or touching it. That's the kindest common rule. A game that only promises a safe first click should force more guesses, but I didn't test that.</p>
+
+<h2>Density matters more than size</h2>
+
+<p>I also ran 10,000 boards at each of 40 extra settings, varying the share of squares that hold mines. At the same density, bigger boards force more guesses, because there are more places to get stuck. But density does most of the work:</p>
+
+<div class="wrap"><table>
+<tr><th>Mine density</th><th>9×9</th><th>16×16</th><th>30×16</th></tr>
+<tr><td>10%</td><td>4.0%</td><td>5.3%</td><td>6.4%</td></tr>
+<tr><td>14%</td><td>14.9%</td><td>20.1%</td><td>23.0%</td></tr>
+<tr><td>18%</td><td>47.6%</td><td>50.9%</td><td>57.8%</td></tr>
+<tr><td>22%</td><td>76.4%</td><td>86.2%</td><td>93.6%</td></tr>
+<tr><td>26%</td><td>92.5%</td><td>99.3%</td><td>99.9%</td></tr>
+</table></div>
+
+<p>The climb is steep. On the Expert board, going from 14% to 22% takes you from about 1 board in 4 to almost every board. Expert's 99 mines sit right near the top of that climb.</p>
+
+<h2>The last-two-squares feeling is real</h2>
+
+<p>I recorded how much of the board was already cleared when the solver got stuck. Among boards that force a guess:</p>
+
+<div class="wrap"><table>
+<tr><th>Difficulty</th><th>Stuck with under 10% cleared</th><th>Stuck with 90% or more cleared</th></tr>
+<tr><td>Beginner</td><td>7.3%</td><td>55.4%</td></tr>
+<tr><td>Intermediate</td><td>16.7%</td><td>67.7%</td></tr>
+<tr><td>Expert</td><td>18.5%</td><td>43.6%</td></tr>
+</table></div>
+
+<p>So a forced guess usually comes near the very end, right when losing hurts most. On Intermediate, two out of three arrive with at least 90% of the safe squares already open. Expert has a second problem: nearly 1 in 5 of its forced guesses shows up almost immediately.</p>
+
+<h2>What this means for no-guess boards</h2>
+
+<p>Some Minesweeper games promise boards you never have to guess on. The simplest way to build one is to generate random boards and throw away any the solver can't finish. At Expert settings only 15.27% survive, so you'd need about 6.5 tries on average for each usable board. For a game that needs them on demand on a phone, that's not free, but it's very doable.</p>
+
+<h2>How I checked the solver</h2>
+
+<p>A wrong solver would make all of this worthless, so I tested it against brute force on 10,000 small boards (6×6 and 7×7):</p>
+
+<ul>
+<li>None of its moves went against the real mines.</li>
+<li>At 3,483 stuck positions, I tried every possible placement of the remaining mines. It hadn't missed a single provable square.</li>
+<li>Another 491 stuck positions had too many covered squares to brute force, so I skipped them.</li>
+</ul>
+
+<p>Full-size boards are too big for this check, so it only covers small ones. During the main run, 10 of the 1,000,000 boards hit the solver's search limit of 5,000,000 steps, 6 of them on Expert. They're left out of the percentages. Those 6 can't move the Expert figure by even 0.01 points, whichever way they'd go.</p>
+
+<h2>Limits</h2>
+
+<ul>
+<li>Each board was played from one random first click. The same mines with a different first click can give a different answer.</li>
+<li>Real versions of Minesweeper differ on the first click, so their numbers will differ from these.</li>
+<li>This counts boards that need at least one guess. It doesn't count how many guesses they need.</li>
+</ul>
+
+<p>The full data is here: <a href="results.csv">results.csv</a>. If you think I got something wrong, I'd really like to hear it.</p>
+
+<footer>
+<p>Disclosure: I ran this because I make a puzzle game, and this is the solver it uses. The level boards in its Minesweeper are checked to be finishable without a guess. It's called <a href="https://play.google.com/store/apps/details?id=com.bloomdoku.app&amp;referrer=utm_source%3Dhackernews%26utm_medium%3Darticle">LumiDoku</a>, it's free on Android, and you don't need it to use anything above.</p>
+</footer>
+</main>
+</body>
+</html>
